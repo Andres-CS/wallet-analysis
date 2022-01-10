@@ -19,6 +19,6 @@
 
 ### Metadata
 
-**Stage:** research
-**Star Date:** 01/10/2022
+**Stage:** research  
+**Star Date:** 01/10/2022  
 **Time:** 2:14 PM 
