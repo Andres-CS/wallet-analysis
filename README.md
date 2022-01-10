@@ -1,12 +1,10 @@
 # Wallet Analysis
 
-
-## Wallet Analysis - Track and get insight into your everyday expenses
-
+## Wallet Analysis - *Track and get insight into your everyday expenses*
 
 ### Why?
 
-1.Centralized point of analysis
+1. Centralized point of analysis
 	1. Warehousing of all my expenses from different sources. 
 	2. Did not want to rely on different banking apps giving me their own opinon solely based on their metrics.
 3. Desired to better understand where my money is going.
