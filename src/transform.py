@@ -54,6 +54,7 @@ def cleanData(srcF):
 
 	with open(srcF,'r') as src:
 		for line in src:
+			line = line.lower()
 			rg = DescriptionColumn_Range(line)
 			row = deleteInSubString(line, rg[0], rg[1])
 			row = deleteInSubString(row, rg[0], rg[1], ';')
@@ -62,98 +63,53 @@ def cleanData(srcF):
 			#Replace data 00/00 for ,
 			row[1] = re.sub("[0-9]{2}\/[0-9]{2}", ",", row[1])
 			
-			row[1] = row[1].replace("'","")
+			for i in ["'",",/20",",/21"]:
+				row[1] = row[1].replace(i,"")
 
-			#Add , after PURCHASE
-			row[1] = addDelimiter(row[1],',','a',"PURCHASE")
+				#Add , after PURCHASE
+
+			wordBank={
+				'c':["CREDITS","check","Check","CHARGE","CONSUMER"],
+				'd':["DEPOSIT","DEBITS"],
+				'f':["Fee","FEE","Funds"],
+				'o':["OVERDRAFT"],
+				'p':["PURCHASE","PAY","pymt","PMT","PMNT","Payment","PAYMENT","payment","PAYROLL"],
+				'r':["REFUND"],
+				't':["TAX","Transfer","transfer","TRANSFER"],
+				'w':["WITHDRWL","withdrawal"]
+			}
+
+			for k in wordBank:
+				for i in wordBank[k]:
+					if i in row[1]:
+						print()
+						print(row[1])
+						row[1] = addDelimiter(row[1],",", "b" , i)
+						row[1] = addDelimiter(row[1],",", "a" , i)
+						print(row[1])
+						print()
+
 			
-			row[1] = addDelimiter(row[1],',','a',"WITHDRWL")
-
-			row[1] = addDelimiter(row[1],',','b',"withdrawal")
-			row[1] = addDelimiter(row[1],',','a',"withdrawal")
-			
-			row[1] = addDelimiter(row[1],',','b',"OVERDRAFT")
-			row[1] = addDelimiter(row[1],',','a',"OVERDRAFT")
-
-			row[1] = addDelimiter(row[1],',','b',"Check")
-			row[1] = addDelimiter(row[1],',','a',"Check")
-
-			row[1] = addDelimiter(row[1],',','b',"CHARGE")
-			row[1] = addDelimiter(row[1],',','a',"CHARGE")
-			
-
-			row[1] = addDelimiter(row[1],',','b',"CHECK")
-			row[1] = addDelimiter(row[1],',','a',"CHECK")
-
-			row[1] = addDelimiter(row[1],',','b',"TAX")
-			row[1] = addDelimiter(row[1],',','a',"TAX")
-			
-
-			row[1] = addDelimiter(row[1],',','b',"pymt")
-			row[1] = addDelimiter(row[1],',','a',"pymt")
-
-			row[1] = addDelimiter(row[1],',','b',"PAY")
-			row[1] = addDelimiter(row[1],',','a',"PAY")
-
-			row[1] = addDelimiter(row[1],',','b',"PMT")
-			row[1] = addDelimiter(row[1],',','a',"PMT")
-
-			row[1] = addDelimiter(row[1],',','a',"PMNT")
-
-			row[1] = addDelimiter(row[1],',','b',"Payment")
-			row[1] = addDelimiter(row[1],',','a',"Payment")
-
-			row[1] = addDelimiter(row[1],',','b',"payment")
-			row[1] = addDelimiter(row[1],',','a',"payment")
-
-			row[1] = addDelimiter(row[1],',','b',"PAYMENT")
-			row[1] = addDelimiter(row[1],',','a',"PAYMENT")
-			
-
-			row[1] = addDelimiter(row[1],',','b',"Fee")
-			row[1] = addDelimiter(row[1],',','a',"Fee")
-
-			row[1] = addDelimiter(row[1],',','b',"FEE")
-			row[1] = addDelimiter(row[1],',','a',"FEE")
-
-			row[1] = addDelimiter(row[1],',','b',"DEBITS")
-			row[1] = addDelimiter(row[1],',','a',"DEBITS")
-
-			row[1] = addDelimiter(row[1],',','b',"CREDITS")
-			row[1] = addDelimiter(row[1],',','a',"CREDITS")
-
-			row[1] = addDelimiter(row[1],',','b',"TRANSFER")
-			row[1] = addDelimiter(row[1],',','a',"TRANSFER")
-		
-			row[1] = addDelimiter(row[1],',','b',"Transfer")
-			row[1] = addDelimiter(row[1],',','a',"Transfer")
-
-			row[1] = addDelimiter(row[1],',','b',"transfer")
-			row[1] = addDelimiter(row[1],',','a',"transfer")
-
-			row[1] = addDelimiter(row[1],',','b',"PAYROLL")
-			row[1] = addDelimiter(row[1],',','a',"PAYROLL")
-
-			row[1] = addDelimiter(row[1],',','b',"DEPOSIT")
-			row[1] = addDelimiter(row[1],',','a',"DEPOSIT")
-
-			row[1] = addDelimiter(row[1],',','b',"CONSUMER")
-			row[1] = addDelimiter(row[1],',','a',"CONSUMER")
-			
-			
-			row[1] = addDelimiter(row[1],',','b',"Funds")
-			row[1] = addDelimiter(row[1],',','a',"Funds")
-			
-
-			row[1] = addDelimiter(row[1],',','a',"REFUND")
-			
-
-			if len(row[1].split(','))<3 or len(row[1].split(','))>3:
-				print(row[1].split(','))
 			
 			row[3]=deleteInSubString(row[3],0,len(row[3]),"\n")
-			dataframe.append(row)
+			
+			#
+			newR = list()
+			for R in range(len(row)):
+				if R == 1:
+					for subr in row[R].split(","):
+						newR.append(subr)
+				else:
+					newR.append(row[R])
+			
+			#print(str(len(newR))+" : ",end="")
+			#print(newR)
+			
+			dataframe.append(newR)
 	
+	
+
+
 	return dataframe
 	
 
