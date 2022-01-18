@@ -1,2 +1,2 @@
-./data/modify/*.csv
-./data/raw/*.csv
+data/modify/*
+data/raw/*
